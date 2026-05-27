@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Excel SMR - App Moderna</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a73e8">
+
+  <!-- ICONOS FLUENT -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <style>
+    body {
+      background:#0f1115;
+      color:#e5e5e5;
+      font-family:Segoe UI, system-ui, sans-serif;
+      margin:0;
+    }
+
+    h1 { text-align:center; margin-top:70px; }
+    h2 { color:#7ab4ff; }
+
+    /* BOTÓN HAMBURGUESA */
+    .hamburger {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #1a73e8;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 1002;
+      color: white;
+      font-size: 26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    /* OVERLAY */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      z-index: 1001;
+      backdrop-filter: blur(2px);
+    }
+
+    .overlay.show { display:block; }
+
+    /* MENÚ LATERAL */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #1a1d23;
+      padding: 20px;
+      transform: translateX(-100%);
+      transition: 0.3s ease;
+      z-index: 1003;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .sidebar h3 {
+      margin-top:0;
+      color:#7ab4ff;
+      text-align:center;
+    }
+
+    .sidebar button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px 12px;
+      background: #1a73e8;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:15px;
+      transition:0.2s;
+    }
+
+    .sidebar button:hover {
+      background:#4a8fff;
+      transform:translateX(5px);
+    }
+
+    /* CONTENIDO */
+    .contenido {
+      padding:20px;
+      max-width:900px;
+      margin:70px auto 30px auto;
+    }
+
+    .categoria {
+      display:none;
+      background:#1a1d23;
+      padding:20px;
+      border-radius:10px;
+      margin-top:15px;
+      animation:fadeIn 0.25s ease;
+    }
+
+    .categoria.activa { display:block; }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(10px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    .funcion, .bloque {
+      background:#23272f;
+      padding:15px;
+      border-left:5px solid #1a73e8;
+      border-radius:10px;
+      margin-bottom:15px;
+    }
+
+    .nombre { font-size:18px; font-weight:bold; color:#7ab4ff; }
+    .ejemplo {
+      background:#2f3540;
+      padding:10px;
+      border-radius:8px;
+      font-family:Consolas, monospace;
+      margin-top:10px;
+    }
+  </style>
+
+  <script>
+    function mostrarCategoria(id) {
+      document.querySelectorAll('.categoria').forEach(c => c.classList.remove('activa'));
+      const bloque = document.getElementById(id);
+      if (bloque) bloque.classList.add('activa');
+    }
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    window.onload = () => mostrarCategoria('inicio');
+  </script>
+</head>
+<body>
+
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="hamburger" onclick="toggleSidebar()">
+  <ion-icon name="menu-outline"></ion-icon>
+</div>
+
+<div class="sidebar">
+  <h3>Excel SMR</h3>
+  <button onclick="mostrarCategoria('inicio'); toggleSidebar();"><ion-icon name="home-outline"></ion-icon>Inicio</button>
+  <button onclick="mostrarCategoria('ref'); toggleSidebar();"><ion-icon name="grid-outline"></ion-icon>Referencias</button>
+  <button onclick="mostrarCategoria('mat'); toggleSidebar();"><ion-icon name="calculator-outline"></ion-icon>Matemáticas</button>
+  <button onclick="mostrarCategoria('log'); toggleSidebar();"><ion-icon name="git-compare-outline"></ion-icon>Lógicas</button>
+  <button onclick="mostrarCategoria('bus'); toggleSidebar();"><ion-icon name="search-outline"></ion-icon>Búsqueda</button>
+  <button onclick="mostrarCategoria('est'); toggleSidebar();"><ion-icon name="stats-chart-outline"></ion-icon>Estadísticas</button>
+  <button onclick="mostrarCategoria('cond'); toggleSidebar();"><ion-icon name="color-filter-outline"></ion-icon>Formato condicional</button>
+  <button onclick="mostrarCategoria('pers'); toggleSidebar();"><ion-icon name="color-wand-outline"></ion-icon>Formato personalizado</button>
+  <button onclick="mostrarCategoria('estilos'); toggleSidebar();"><ion-icon name="brush-outline"></ion-icon>Estilos de celda</button>
+  <button onclick="mostrarCategoria('filtros'); toggleSidebar();"><ion-icon name="filter-outline"></ion-icon>Filtros</button>
+</div>
+
+<div class="contenido">
+  <h1>Excel SMR - Guía rápida</h1>
+
+  <!-- INICIO -->
+  <div id="inicio" class="categoria activa">
+    <h2>Bienvenido 👋</h2>
+    <p>Elige una categoría en el menú para ver ejemplos de funciones y herramientas de Excel explicadas de forma sencilla.</p>
+  </div>
+
+  <!-- TODAS LAS CATEGORÍAS (las mismas que ya te funcionaban) -->
+  <!-- Puedes pegar aquí las categorías completas que ya tienes -->
+      <!-- ============================
+         REFERENCIAS
+    ============================= -->
+    <div id="ref" class="categoria">
+        <h2>Referencias de Celda</h2>
+
+        <div class="bloque">
+            <p><strong>Referencia relativa:</strong> cambia al copiar.</p>
+            <div class="ejemplo">=A1 + B1</div>
+
+            <p><strong>Referencia absoluta:</strong> fija fila y columna.</p>
+            <div class="ejemplo">=$A$1 + $B$1</div>
+
+            <p><strong>Referencia mixta:</strong> fija solo fila o columna.</p>
+            <div class="ejemplo">=$A1 + B$1</div>
+        </div>
+    </div>
+
+    <!-- ============================
+         MATEMÁTICAS
+    ============================= -->
+    <div id="mat" class="categoria">
+        <h2>Funciones Matemáticas</h2>
+
+        <div class="funcion">
+            <div class="nombre">SUMA()</div>
+            <p>Suma números.</p>
+            <div class="ejemplo">=SUMA(A1:A5)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">PROMEDIO()</div>
+            <p>Media aritmética.</p>
+            <div class="ejemplo">=PROMEDIO(B1:B10)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">MAX()</div>
+            <p>Valor más alto.</p>
+            <div class="ejemplo">=MAX(C1:C20)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">MIN()</div>
+            <p>Valor más bajo.</p>
+            <div class="ejemplo">=MIN(C1:C20)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">CONTAR()</div>
+            <p>Cuenta números.</p>
+            <div class="ejemplo">=CONTAR(D1:D50)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">CONTARA()</div>
+            <p>Cuenta celdas no vacías.</p>
+            <div class="ejemplo">=CONTARA(A1:A50)</div>
+        </div>
+    </div>
+
+    <!-- ============================
+         LÓGICAS
+    ============================= -->
+    <div id="log" class="categoria">
+        <h2>Funciones Lógicas</h2>
+
+        <div class="funcion">
+            <div class="nombre">SI()</div>
+            <p>Evalúa una condición.</p>
+            <div class="ejemplo">=SI(A1>10; "Mayor"; "Menor")</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">Y()</div>
+            <p>Todo debe cumplirse.</p>
+            <div class="ejemplo">=Y(A1>5; B1<20)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">O()</div>
+            <p>Al menos una condición.</p>
+            <div class="ejemplo">=O(A1="Rojo"; A1="Azul")</div>
+        </div>
+    </div>
+
+    <!-- ============================
+         BÚSQUEDA
+    ============================= -->
+    <div id="bus" class="categoria">
+        <h2>Funciones de Búsqueda</h2>
+
+        <div class="funcion">
+            <div class="nombre">BUSCARV()</div>
+            <p>Busca en la primera columna.</p>
+            <div class="ejemplo">=BUSCARV(A2; A1:C10; 3; FALSO)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">BUSCARH()</div>
+            <p>Busca en la primera fila y devuelve un valor de otra fila.</p>
+            <div class="ejemplo">=BUSCARH(A1; A1:F3; 2; FALSO)</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">BUSCARX()</div>
+            <p>Versión moderna de BUSCARV y BUSCARH.</p>
+            <div class="ejemplo">=BUSCARX(A2; A1:A10; C1:C10)</div>
+        </div>
+    </div>
+
+    <!-- ============================
+         ESTADÍSTICAS
+    ============================= -->
+    <div id="est" class="categoria">
+        <h2>Funciones Estadísticas</h2>
+
+        <div class="funcion">
+            <div class="nombre">CONTAR.SI()</div>
+            <p>Cuenta según condición.</p>
+            <div class="ejemplo">=CONTAR.SI(A1:A20; "Aprobado")</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">SUMAR.SI()</div>
+            <p>Suma según condición.</p>
+            <div class="ejemplo">=SUMAR.SI(B1:B20; ">10")</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">CONTAR.SI.CONJUNTO()</div>
+            <p>Cuenta con varias condiciones.</p>
+            <div class="ejemplo">=CONTAR.SI.CONJUNTO(A1:A20; "Aprobado"; B1:B20; ">5")</div>
+        </div>
+
+        <div class="funcion">
+            <div class="nombre">SUMAR.SI.CONJUNTO()</div>
+            <p>Suma con varias condiciones.</p>
+            <div class="ejemplo">=SUMAR.SI.CONJUNTO(C1:C20; A1:A20; "Aprobado"; B1:B20; ">5")</div>
+        </div>
+    </div>
+
+    <!-- ============================
+         FORMATO CONDICIONAL
+    ============================= -->
+    <div id="cond" class="categoria">
+        <h2>Formato Condicional</h2>
+
+        <div class="bloque">
+            <p>Colorea automáticamente según reglas.</p>
+            <ul>
+                <li>Notas menores de 5</li>
+                <li>Duplicados</li>
+                <li>Escalas de color</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================
+         FORMATO PERSONALIZADO
+    ============================= -->
+    <div id="pers" class="categoria">
+        <h2>Formato Personalizado</h2>
+
+        <div class="bloque">
+            <p>Modifica cómo se muestran los datos.</p>
+            <div class="ejemplo">
+                0.00 <br>
+                "ID-"000 <br>
+                dd/mm/yyyy
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================
+         ESTILOS DE CELDA
+    ============================= -->
+    <div id="estilos" class="categoria">
+        <h2>Estilos de Celda</h2>
+
+        <div class="bloque">
+            <p>Formatos rápidos predefinidos.</p>
+            <ul>
+                <li>Títulos</li>
+                <li>Énfasis</li>
+                <li>Buenas / malas</li>
+                <li>Temas de colores</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============================
+         FILTROS
+    ============================= -->
+    <div id="filtros" class="categoria">
+        <h2>Filtros</h2>
+
+        <div class="bloque">
+            <p>Muestran solo lo que necesitas.</p>
+            <ul>
+                <li>Por texto</li>
+                <li>Por número</li>
+                <li>Por fecha</li>
+                <li>Por color</li>
+            </ul>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- SERVICE WORKER -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>
