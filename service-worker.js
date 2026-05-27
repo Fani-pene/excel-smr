@@ -2,9 +2,9 @@ self.addEventListener("install", e => {
   e.waitUntil(
     caches.open("excel-smr-cache").then(cache => {
       return cache.addAll([
-        "/",
-        "/index.html",
-        "/manifest.json"
+        "/excel-smr/",
+        "/excel-smr/index.html",
+        "/excel-smr/manifest.json"
       ]);
     })
   );
